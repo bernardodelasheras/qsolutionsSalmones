@@ -9,10 +9,6 @@ var flash = require("connect-flash")
 var task = require("./models/task")
 var { promiseImpl } = require("ejs")
 
-// const { Sequelize, Model, DataTypes } = require('sequelize');
-
-
-
 
 // const sequelize = new Sequelize('testdb', 'bdelasheras', 'b2rn1rd4$$##', {
 //     host: 'testdbbdd.database.windows.net',
