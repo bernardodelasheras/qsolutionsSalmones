@@ -1,0 +1,64 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+    <div class="row" style="display:flex; flex-wrap:wrap; padding-top: 10px; padding-bottom: 15px">
+        <table style="width: 60%">
+            <tr>
+                <th>
+                    <h2>Elimina Motivo</h2>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div class="titulo">
+    <div class="ui main text container ">
+
+        
+        <form class="ui form" action="/motivo/<%= data.idMotivo %>?_method=DELETE" method="POST">
+            <div class="subform">
+
+                <div class="form-group">
+                    <label for="codigo">Código</label>
+                    <input class="form-control" id="codigo" type="number" name="data[codigo]" 
+                        value="<%= data.codigo %>" readonly disabled="true">
+                </div>
+
+                <div class="form-group">
+                    <label for="glosa">Glosa</label>
+                    <input class="form-control" id="glosa" type="text" maxlength="30" name="data[glosa]" 
+                        value="<%= data.glosa %>" readonly disabled="true">
+                </div>
+
+
+
+                <input class="btn btn-primary btn-large" type="submit" value="Confirma Eliminación">
+                <a class="btn btn-primary btn-large" href="/motivo/index">Cancela Eliminación</a>
+            </div>
+        </form>    
+        
+
+    </div>
+</div>
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<%- include('../partials/footer.ejs') %>

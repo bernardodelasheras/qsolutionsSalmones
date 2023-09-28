@@ -1,0 +1,60 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h2 style="margin-top: 0px;">Motivos</h2>
+            <a class="btn btn-primary btn-large" href="/motivo/new">Nuevo Motivo</a>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display compact" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Código</th>
+                        <th>Glosa</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                        <tr>
+                            <td>
+                                <%= e.idMotivo %>
+                            </td>
+                            <td>
+                                <%= e.codigo %>
+                            </td>
+                            <td>
+                                <%= e.glosa %>
+                            </td>
+                            
+
+                            <% if (e.cuenta == 0) {%>
+                                <td><a href="/motivo/<%= e.idMotivo %>/edit" class="btn btn-sm btn-primary ">Modificar</a></td>
+                                <td><a href="/motivo/<%= e.idMotivo %>/delete" class="btn btn-sm btn-primary ">Eliminar</a></td>
+                            <% } else { %>
+                                <td></td>
+                                <td></td>
+                            <% } %>
+                        </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<%- include('../partials/footer.ejs') %>

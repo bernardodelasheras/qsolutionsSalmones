@@ -1,0 +1,97 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="titulo">
+    <div class="ui main text container segment" style="width: 70%;">
+        <table>
+            <tr>
+                <th>
+                    <h4>Agenda Ejecución Carga Solicitudes </h4>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+<div class="titulo">
+    <div class="ui main text container segment" style="width: 70%;">
+
+        <form class="ui form" action="/agendaCarga/index" method="POST" id="formulario">
+            <div class="subform">
+                
+                <div class="form-group">
+                    <label for="correo">Correo</label>
+                    <input class="form-control" id="correo" type="text" name="data[correo]" placeholder="Correo" 
+                    value="<%= data.correo %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="dia">Día del Mes</label>
+                    <input class="form-control" id="dia" type="number" name="data[dia]" placeholder="Día" 
+                    value="<%= data.dia %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="hora">Hora de Ejecución</label>
+                    <br>
+                    <input class="rut-control" id="hora" type="number" name="data[hora]" placeholder="Hora 0 - 23"
+                        value="<%= data.hora %>" min=0 max=24 style="width: 20%;">
+                    <input class="rut-control" id="minuto" type="number" name="data[minuto]" placeholder="Minuto 0 - 59"
+                        value="<%= data.minuto %>" min=0 max=59 style="width: 20%;">
+                </div>
+
+
+                <input class="btn btn-primary" type="submit" id="ButtonProcesa" value="Procesar">
+
+                <!-- <input class="btn btn-primary " type="submit" id="ButtonProcesaAhora" value="Procesar Ahora"
+                    formaction="/agendaCarga/indexApi" method="POST"> -->
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<script>
+
+    $(function () {
+        $('#ButtonProcesa').click(function () {
+            $('#formulario').append('<div class="loader" id="loader-7"></div>')
+            $('#ButtonProcesa').hide()
+            $('#ButtonProcesaAhora').hide()
+        });
+        $('#ButtonProcesaAhora').click(function () {
+            $('#formulario').append('<div class="loader" id="loader-7"></div>')
+            $('#ButtonProcesa').hide()
+            $('#ButtonProcesaAhora').hide()
+        });
+    });
+
+
+</script>
+
+
+<%- include('../partials/footer.ejs') %>

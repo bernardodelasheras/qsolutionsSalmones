@@ -1,0 +1,68 @@
+<% include ../partials/header %>
+
+<div class="titulo">
+    <div class="ui main text container segment" style="padding-top: 30px; padding-bottom: 15px">
+        <div class="ui huge header">
+            <h3>Programa Ejecución Diaria Reporte Workflow
+                <a class="btn btn-primary btn-large" style="margin-left: 50px;" href="/wf_reporte/index">Volver a
+                    Reporte</a>
+            </h3>
+        </div>
+        <br>
+
+        <form class="ui form" action="/wf_reporteDetallado/programa" method="POST" id="formulario">
+            <div style="display: none;">
+                <input class="form-control" id="empid" type="number" name="data[empid]" value="<%= data.empid %>">
+                <input class="form-control" id="proyectos" type="text" name="data[proyectos]" value="<%= data.proyectos %>">
+            </div>
+
+            <div class="form-group">
+                <label for="destinatarios">Destinatarios (Separados por coma)</label>
+                <input class="form-control" id="destinatarios" type="text" name="data[destinatarios]"
+                    placeholder="Destinatarios" value="<%= data.destinatarios %>">
+            </div>
+
+            <div class="form-group">
+                <label for="dia">Día de la Semana</label>
+                <select class="form-control" data-style="btn-info" id=dia name="data[dia]">
+                    <% data.dias.forEach(function(e){ %>
+                        <option value="<%= e.dia %>">
+                            <%= e.glosa %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="hora">Hora (Entre 0 y 24) Minutos (Entre 0 y 59)</label>
+                <input class="rut-control" id="hora" type="number" name="data[hora]" placeholder="hora"
+                    value="<%= data.hora %>" min=0 max=24 style="width: 8%;">
+                <input class="rut-control" id="minuto" type="number" name="data[minuto]" placeholder="minuto"
+                    value="<%= data.minuto %>" min=0 max=59 style="width: 8%;">
+
+            </div>
+
+            <input class="btn btn-primary" type="submit" id="ButtonProcesa" value="Procesar">
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    $(function () {
+        $('#ButtonProcesa').click(function () {
+            $('#formulario').append('<div class="loader" id="loader-7"></div>');
+            $('#ButtonProcesa').hide();
+        });
+    });
+
+
+</script>
+
+
+<% include ../partials/footer %>

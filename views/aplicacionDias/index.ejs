@@ -1,0 +1,50 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h3 style="margin-top: 0px;">Días de acceso a Aplicaciones</h3>
+            <a class="btn btn-primary btn-large" href="/aplicacionDias/new">Nuevo</a>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display compact" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Ruta</th>
+                        <th>desde</th>
+                        <th>hasta</th>
+                        <th></th>
+                        <!-- <th></th> -->
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td> <%= e.ruta %> </td>
+                        <td> <%= e.desde %> </td>
+                        <td> <%= e.hasta %> </td>
+                        <td><a href="/aplicacionDias/<%= e.idAplicacionDias %>/edit" class="btn btn-xs btn-primary ">Modificar</a>
+                        <!-- <td><a href="/aplicacion/<%= e.idAplicacion %>/delete" class="btn btn-xs btn-primary ">Eliminar</a> -->
+                    </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<%- include('../partials/footer.ejs') %>

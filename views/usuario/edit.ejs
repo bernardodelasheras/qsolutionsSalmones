@@ -1,0 +1,127 @@
+<%- include('../partials/header.ejs') %>
+
+
+<div class="titulo">
+    <div class="ui main text container segment" style="width: 70%;">
+        <table>
+            <tr>
+                <th>
+                    <h4>Modifica Usuario</h4>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+
+<div class="titulo">
+    <div class="ui main text container segment" style="width: 70%;">
+
+        <form class="ui form" action="/usuario/<%= data.idUsuario %>?_method=PUT" method="POST">
+            <div class="subform">
+                <div class="form-group">
+                    <label for="usuario">Usuario</label>
+                    <input class="form-control" id="usuario" type="text" name="data[username]" placeholder="Usuario"
+                        value="<%= data.username %>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input class="form-control" id="nombre" type="text" name="data[nombre]" placeholder="Nombre del Usuario"
+                        value="<%= data.nombre %>">
+                </div>
+                
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input class="form-control" id="password" type="password" name="data[password]" placeholder="Contraseña"
+                        value="<%= data.password %>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">EMail</label>
+                    <input class="form-control" id="email" type="email" name="data[email]" placeholder="EMail"
+                        value="<%= data.email %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="idRepertorio">Empleado BUK</label>
+
+                    <input class="form-control" id=filtroPersonas name="filtroPersonas" 
+                       onkeyup="filtraPersonas()" style="text-transform:uppercase">
+
+                    <select class="form-control" id=idBuk name="data[idBuk]">
+
+                        <% personas.forEach(function(e){ %>
+                            <% if (data.idBuk==e.idBuk) { %>
+                                <option value="<%= e.idBuk %>" selected>
+                                    <%= e.rut %>  <%= e.nombre%>
+                                </option>
+                            <% } else { %>
+                                <option value="<%= e.idBuk %>">
+                                    <%= e.rut %>  <%= e.nombre%>
+                                </option>
+                            <% } %>
+                        <% }) %>
+                        
+
+                    </select>
+                </div>
+
+
+                <input class="btn btn-primary btn-large" type="submit" value="Guardar">
+                <a class="btn btn-primary btn-large" href="/usuario/index">Cancela Modificación</a>
+            </div>            
+        </form>    
+
+
+    </div>
+</div>
+
+<script>
+
+
+    function filtraPersonas() {
+        var keyword = document.getElementById("filtroPersonas").value.toUpperCase();
+        var select = document.getElementById("idBuk");
+        for (var i = 0; i < select.length; i++) {
+            var txt = select.options[i].text;
+            if (!txt.match(keyword)) {
+                $(select.options[i]).attr('disabled', 'disabled').hide();
+            } else {
+                $(select.options[i]).removeAttr('disabled').show();
+            }
+
+        }
+    }        
+
+
+</script>
+
+
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+
+
+
+
+<%- include('../partials/footer.ejs') %>

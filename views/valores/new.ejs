@@ -1,0 +1,75 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+    <div class="row" style="display:flex; flex-wrap:wrap; padding-top: 10px; padding-bottom: 15px">
+        <table style="width: 60%">
+            <tr>
+                <th>
+                    <h2>Nuevo Valores</h2>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+
+<div class="titulo">
+    <div class="ui main text container" >
+        <form class="ui form" action="/valores/valores" method="POST">
+
+            <div class="subform">
+
+                <div class="form-group">
+                    <label for="idCargo">Cargo</label>
+                    <select class="form-control" id=idCargo name="data[idCargo]">
+                        <% cargos.forEach(function(e){ %>
+                            <option value="<%= e.idCargo %>">
+                                <%= e.nombre%>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Sindicalizado">Sindicalizado</label>
+                    <input class="form-control" id="Sindicalizado" type="number" name="data[Sindicalizado]" 
+                        value="<%= data.Sindicalizado %>" >
+                </div>
+
+                <div class="form-group">
+                    <label for="noSindicalizado">No Sindicalizado</label>
+                    <input class="form-control" id="noSindicalizado" type="number" name="data[noSindicalizado]" 
+                        value="<%= data.noSindicalizado %>" >
+                </div>
+
+                <input class="btn btn-primary btn-large" type="submit" value="Guardar">
+                <a class="btn btn-primary btn-large" href="/valores/index">Cancela</a>
+
+            </div>
+
+        </form>    
+
+    </div>
+</div>
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<%- include('../partials/footer.ejs') %>

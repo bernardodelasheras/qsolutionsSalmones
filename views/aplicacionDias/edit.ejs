@@ -1,0 +1,47 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+    <div class="row text-center"  style="display:flex; flex-wrap:wrap; padding-top: 30px; padding-bottom: 15px">
+        <table style="width: 60%">
+            <tr style="background-color: gainsboro">
+                <th  style="text-align: center">
+                    <h3>Modifica Días Aplicación</h3>
+                </th>
+            </tr>    
+        </table>        
+
+    </div>
+</div>
+
+
+<div class="titulo">
+    <div class="ui main text container ">
+
+        <form class="ui form" action="/aplicacionDias/<%= data.idAplicacionDias %>?_method=PUT" method="POST">
+            
+            <div class="form-group">
+                <label for="ruta">Ruta</label>
+                <input class="form-control" id="ruta" type="text" name="data[ruta]" placeholder="Ruta"
+                    value="<%= data.ruta %>">
+            </div>
+
+            <div class="form-group">
+                <label for="Día desde">Día Desde</label>
+                <input class="form-control" id="desde" type="number" name="data[desde]" placeholder="Día Desde" 
+                    value="<%= data.desde %>">
+            </div>
+
+            <div class="form-group">
+                <label for="Día Hasta">Día Hasta</label>
+                <input class="form-control" id="hasta" type="number" name="data[hasta]" placeholder="Día Hasta" 
+                    value="<%= data.hasta %>">
+            </div>
+
+            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Guardar">
+        </form>    
+
+
+    </div>
+</div>
+
+<%- include('../partials/footer.ejs') %>

@@ -1,0 +1,48 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h2 style="margin-top: 0px;">Token para APIs</h2>
+            <a class="btn btn-primary btn-large" href="/token/new">Nuevo Token</a>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Token</th>
+                        <th>API</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td> <%= e.usuario %> </td>
+                        <td> <%= e.token %> </td>
+                        <td> <%= e.api %> </td>
+                        <td><a href="/token/<%= e.idToken %>/delete" class="btn btn-xs btn-primary ">Eliminar</a>
+                    </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<%- include('../partials/footer.ejs') %>

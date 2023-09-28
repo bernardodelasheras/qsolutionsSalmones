@@ -1,0 +1,28 @@
+<%- include('../partials/headerMobile.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="form-group"><h2 style="text-align: center; padding-top: 0px; padding-bottom: 15px">Inicio de Sesión</h2></div>
+        <div style="width: 80%; margin: 15px auto;">
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input class="form-control form-control-lg" style="border-style:groove; border-width: 2px; font-size: 90%; " id="usuario" type="text" 
+                    name="data[username]">
+                </div>
+                <div class="form-group">
+                    <label for="username">
+                        Contraseña
+                    </label>
+                    <input class="form-control" style="border-style:groove; border-width: 2px; ; " id="password" type="password" 
+                    name="data[password]">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block btn-outline btn-wrap-text" >Log In</button>
+                </div>
+            </form>
+        </div>
+    </div>    
+</div>
+
+<%- include('../partials/footer.ejs') %>

@@ -1,0 +1,56 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+    <div class="row" style="display:flex; flex-wrap:wrap; padding-top: 10px; padding-bottom: 15px">
+        <table style="width: 60%">
+            <tr>
+                <th>
+                    <h2>Elimina Periodos</h2>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div class="titulo">
+    <div class="ui main text container ">
+
+        
+        <form class="ui form" action="/periodos/<%= data.id %>?_method=DELETE" method="POST">
+            <div class="subform">
+
+                <div class="form-group">
+                    <label for="periodo">Periodo</label>
+                    <input class="form-control" id="periodo" type="number" name="data[periodo]" 
+                        value="<%= data.periodo %>" readonly disabled="true">
+                </div>
+
+                <input class="btn btn-primary btn-large" type="submit" value="Confirma Eliminación">
+                <a class="btn btn-primary btn-large" href="/periodos/index">Cancela Eliminación</a>
+            </div>
+        </form>    
+        
+
+    </div>
+</div>
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<%- include('../partials/footer.ejs') %>

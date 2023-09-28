@@ -1,0 +1,77 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h3 style="margin-top: 0px;">Confirma Solicitudes</h3>
+        </div>
+    </header>
+</div>
+
+<div class="container">
+<div class="titulo">
+    <div class="row" style="display:flex; flex-wrap:wrap;">
+        <table id="grillasimple" class="display compact" style="width:100%; font-size: small;">
+            <thead>
+                <tr>
+                    <th>Nro.</br>Solicitud</th>
+                    <th>Solicitante</th>
+                    <th>Fecha</th>
+                    <th>Motivo</th>
+                    <th>Fecha</br>Reemplazo</th>
+                    <th>Reemplazante</th>
+                    <th>Estado</th>
+                    <th></th>
+                    <!-- <th></th>
+                    <th></th>   
+                    <th></th> -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td style="text-align: center;">
+                            <%= e.idSolicitud %>
+                        </td>
+                        <td>
+                            <%= e.solicitante %>
+                        </td>
+                        <td>
+                            <%= e.fecha %>
+                        </td>
+                        <td>
+                            <%= e.motivo %>
+                        </td>
+                        <td>
+                            <%= e.fechaReemplazo %>
+                        </td>
+                        <td>
+                            <%= e.Reemplazante %>
+                        </td>
+                        <td>
+                            <%= e.estado %>
+                        </td>
+                        <% if (e.estado=='Ingresado') { %>
+                            <td><a href="/solicitudesConf2/<%= e.idSolicitud %>/confirmar" class="btn btn-sm btn-primary" disabled="true" style="pointer-events: none;">Confirma</a></td>
+                        <% } else { %>
+                            <% if (e.estado=='Aprobado Operaciones') { %>    
+                                <td><a href="/solicitudesConf2/<%= e.idSolicitud %>/confirmar" class="btn btn-sm btn-primary" >Confirma</a></td>
+                            <% } else { %>    
+                                <td><a href="/solicitudesConf2/<%= e.idSolicitud %>/confirmar" class="btn btn-sm btn-primary" disabled="true" style="pointer-events: none;">Confirma</a></td>
+                            <% } %>   
+                        <% } %>
+                    </tr>
+
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+
+<%- include('../partials/footer.ejs') %>

@@ -1,0 +1,35 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="titulo">
+    <div class="ui main text container segment" style="padding-top: 30px; padding-bottom: 15px">
+        <div class="ui huge header">Nuevo Token</div>
+        <form class="ui form" action="/token/tokens" method="POST">
+
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <input class="form-control" id="usuario" type="text" readonly="true" name="data[usuario]" placeholder="Usuario" 
+                    value="<%= data.usuario %>">
+            </div>
+
+            <div class="form-group">
+                <label for="token">Nombre</label>
+                <input class="form-control" id="token" type="text" readonly="true" name="data[token]" placeholder="Token"
+                    value="<%= data.token %>">
+            </div>
+
+
+            <div class="form-group">
+                <label for="api">API</label>
+                <input class="form-control" id="api" type="api" name="data[api]" placeholder="API"
+                    value="<%= data.api %>">
+            </div>
+
+            <input class="ui primary button" type="submit" value="Guardar">
+
+        </form>    
+
+
+    </div>
+</div>
+
+<%- include('../partials/footer.ejs') %>

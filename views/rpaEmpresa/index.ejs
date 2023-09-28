@@ -1,0 +1,52 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h3 style="margin-top: 0px;">Empresas para Robot Dirección del Trabajo</h3>
+            <a class="btn btn-primary btn-large" href="/rpaEmpresa/new">Nueva Empresa</a>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Url Buk</th>
+                        <th>Email Supervisor</th>
+                        <th>Meses a Procesar</th>
+                        <th>Usuario</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td> <%= e.nombre %> </td>
+                        <td> <%= e.urlbuk %> </td>
+                        <td> <%= e.emaillog %> </td>
+                        <td> <%= e.meses %> </td>
+                        <td> <%= e.usernamebuk %> </td>
+                        <td><a href="/rpaEmpresa/<%= e.idEmpresa %>/edit" class="btn btn-xs btn-primary ">Modificar</a>
+                    </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<%- include('../partials/footer.ejs') %>

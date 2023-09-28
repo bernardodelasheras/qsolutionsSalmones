@@ -1,0 +1,262 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+    <div class="row" >
+        <table style="width: 60%">
+            <tr>
+                <th>
+                    <h3>Nueva Solicitud</h3>
+                </th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<div class="titulo">
+    <div class="ui main text container" >
+        <form class="ui form" action="/solicitudes/solicitudes" method="POST">
+
+            <div class="subform">
+
+                <div class="form-group" style="padding-left: 15px; margin-bottom: 0px;">
+                    <div class="row" style="display:flex; flex-wrap:wrap;">
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="Fecha">Fecha</label>
+                            <input class="form-control" id="fecha" type="date" name="data[fecha]" 
+                                value="<%= data.fecha %>" readonly style="width: 150px">
+                        </div>
+
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="solicitante">Solicitante</label>
+                            <input class="form-control" id="solicitante" type="text" name="data[solicitante]" 
+                                value="<%= data.solicitante %>" readonly disabled="true" style="width: 400px">
+                        </div>
+
+
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="idMotivo">Motivo</label>
+                            <select class="form-control" id=idMotivo name="data[idMotivo]" style="width: 200px">
+                                <% motivos.forEach(function(e){ %>
+                                    <option value="<%= e.idMotivo %>">
+                                        <%= e.glosa%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="estado">Estado</label>
+                            <select class="form-control" id=estado name="data[estado]" readonly style="width: 200px">
+                                <% estados.forEach(function(e){ %>
+                                    <option value="<%= e.codigo %>">
+                                        <%= e.descripcion%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="padding-right: 5px;">
+                            <input class="form-control" id="idUsuarioSolicitante" type="text" name="data[idUsuarioSolicitante]" 
+                                value="<%= data.idUsuarioSolicitante %>"  style="visibility: hidden; width: 3px;">
+                        </div>
+                        
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaReemplazo">Fecha a Realizar Reemplazo</label>
+                    <input class="form-control" id="fechaReemplazo" type="date" name="data[fechaReemplazo]" 
+                        value="<%= data.fechaReemplazo %>" style="width: 150px">
+                </div>
+
+                <div class="form-group" style="padding-left: 15px; margin-bottom: 0px;">
+                    <div class="row" style="display:flex; flex-wrap:wrap;">
+
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="idCargoReemplazante">Cargo Reemplazante</label>
+                            <select class="form-control" id=idCargoReemplazante name="data[idCargoReemplazante]" style="width: 300px" onchange="CargoReemplazanteChange();">
+                                <% cargos.forEach(function(e){ %>
+                                    <option value="<%= e.idCargo %>">
+                                        <%= e.nombre%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="idBukReemplazante">Reemplazante</label>
+                            <select class="form-control" id=idBukReemplazante name="data[idBukReemplazante]" style="width: 400px" onchange="ReemplazanteChange();">
+                                <% reemplazantes.forEach(function(e){ %>
+                                    <option value="<%= e.idBuk %>">
+                                        <%= e.nombre%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>        
+
+
+                <div class="form-group" style="padding-left: 15px; margin-bottom: 0px;">
+                    <div class="row" style="display:flex; flex-wrap:wrap;">
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="idArea">Centro de Costos</label>
+                            <select class="form-control" id=idArea name="data[idArea]" style="width: 300px">
+                                <% areas.forEach(function(e){ %>
+                                    <option value="<%= e.idBuk %>">
+                                        <%= e.nombre%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+        
+                        <div class="form-group" >
+                            <label for="valor">Valor Bruto </label>
+                            <input class="form-control" id="valor" type="number" name="data[valor]" 
+                                value="<%= data.valor %>" style="width: 200px" readonly >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="padding-left: 15px; margin-bottom: 0px;">
+                    <div class="row" style="display:flex; flex-wrap:wrap;">
+                        <div class="form-group" style="padding-right: 5px;">
+                            <label for="idCargoReemplazado">Cargo Reemplazado</label>
+                            <select class="form-control" id=idCargoReemplazado name="data[idCargoReemplazado]" style="width: 300px" onchange="CargoReemplazadoChange();">
+                                <% cargos.forEach(function(e){ %>
+                                    <option value="<%= e.idCargo %>">
+                                        <%= e.nombre%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="idBukReemplazado">Reemplazado</label>
+                            <select class="form-control" id=idBukReemplazado name="data[idBukReemplazado]" style="width: 400px" >
+                                <% reemplazados.forEach(function(e){ %>
+                                    <option value="<%= e.idBuk %>">
+                                        <%= e.nombre%>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="explicacion">Explicación</label>
+                    <textarea class="form-control" id="explicacion" type="textarea" name="data[explicacion]" 
+                        value="<%= data.explicacion %>" rows="3" maxlength="512"></textarea>
+                </div>
+
+
+                <input class="btn btn-primary btn-large" type="submit" value="Enviar">
+                <a class="btn btn-primary btn-large" href="/solicitudes/index">Cancela</a>
+
+            </div>
+
+        </form>    
+
+    </div>
+</div>
+
+<script>
+
+    $('#estado').css('pointer-events','none');
+
+    function CargoReemplazanteChange() {
+        var nuevoCargo = $('#idCargoReemplazante option:selected').val();
+        procesaCargoReemplazanteChange(nuevoCargo);
+    }
+
+    function procesaCargoReemplazanteChange(nuevoCargo) {
+        $.ajax({
+            url: "/solicitudes/personas/" + nuevoCargo,
+            type: 'GET',
+            success: function (res) {
+                var objeto = $('#idBukReemplazante')
+                objeto.empty().append('<select class="form-control" id=idBukReemplazante name="data[idBukReemplazante]">');
+                var i=1
+                res.data.forEach(d => {
+                    if (i==1) {
+                        procesaReemplazanteChange(d.idBuk)
+                        objeto.append('<option value="' + d.idBuk + '"selected >' + d.nombre + '</option>');    
+                    } else {
+                        objeto.append('<option value="' + d.idBuk + '">' + d.nombre + '</option>');
+                    }
+                    i++
+                });
+            }
+        });
+    }
+
+    function ReemplazanteChange() {
+        var nuevoReemplazante = $('#idBukReemplazante option:selected').val();
+        procesaReemplazanteChange(nuevoReemplazante);
+    }
+
+    function procesaReemplazanteChange(nuevoReemplazante) {
+        $.ajax({
+            url: "/solicitudes/valor/" + nuevoReemplazante,
+            type: 'GET',
+            success: function (res) {
+                var objeto = $('#valor')
+                objeto.val(res.data.Valor)
+            }
+        });
+    }
+
+    function CargoReemplazadoChange() {
+        var nuevoCargo = $('#idCargoReemplazado option:selected').val();
+        procesaCargoReemplazadoChange(nuevoCargo);
+    }
+
+    function procesaCargoReemplazadoChange(nuevoCargo) {
+        $.ajax({
+            url: "/solicitudes/personas/" + nuevoCargo,
+            type: 'GET',
+            success: function (res) {
+                var objeto = $('#idBukReemplazado')
+                objeto.empty().append('<select class="form-control" id=idBukReemplazado name="data[idBukReemplazado]">');
+                var i=1
+                res.data.forEach(d => {
+                    if (i==1) {
+                        objeto.append('<option value="' + d.idBuk + '"selected >' + d.nombre + '</option>');    
+                    } else {
+                        objeto.append('<option value="' + d.idBuk + '">' + d.nombre + '</option>');
+                    }
+                    i++
+                });
+            }
+        });
+    }
+
+
+</script>
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<%- include('../partials/footer.ejs') %>

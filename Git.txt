@@ -1,0 +1,17 @@
+Subir versiones con Git a github
+
+cd C:\Users\berna\OneDrive\NodeJs\RioNapo\qsolutions
+
+git add --all
+
+git commit -m 'descripcion-modificacion'
+
+git branch   '''Para saber en qu� rama estoy
+
+git push 
+
+
+token: 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
+
+username: bernardodelasheras@gmail.com
+password: B2rn1rd4$$##

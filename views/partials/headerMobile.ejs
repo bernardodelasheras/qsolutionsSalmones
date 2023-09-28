@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<html>
+    <head>
+        <title>App.Areas Chile</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/bootstrap.min.css"> 
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/jquery-ui.min.css">
+        <link rel="stylesheet" href="/stylesheets/lib/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="/stylesheets/lib/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="/stylesheets/lib/responsive.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
+
+    </head>
+    <body style="font-size: 120%;">
+        <script src="/stylesheets/lib/moment.js"></script>
+        <script src="/stylesheets/lib/jquery-3.5.1.js"></script>
+        <script src="/stylesheets/lib/jquery-ui.min.js"></script>
+        <script src="/stylesheets/lib/jquery.dataTables.min.js"></script>
+        <script src="/stylesheets/lib/dataTables.buttons.min.js"></script>
+        <script src="/stylesheets/lib/dataTables.responsive.min.js"></script>
+        <script src="/stylesheets/lib/dataTables.bootstrap.min.js"></script>
+        <script src="/stylesheets/lib/jszip.min.js"></script>
+        <script src="/stylesheets/lib/pdfmake.min.js"></script>
+        <script src="/stylesheets/lib/vfs_fonts.js"></script>
+        <script src="/stylesheets/lib/buttons.html5.min.js"></script>
+        <script src="/stylesheets/lib/bootstrap.js"></script>
+        <script src="/stylesheets/lib/sweetalert.js"></script>
+        
+
+        <nav class="navbar navbar-inverse navbar-fixed-top color-navbar" >
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <% if (!usuarioActual) { %>
+                    <a class="navbar-brand" href="#">QA</a>
+                    <% } else { %>
+                    <a class="navbar-brand" href="#">QA / (usuario: <%= usuarioActual.username %>)</a>
+                    <% } %>
+                    <button data-toggle="collapse"
+                        class="navbar-toggle collapsed" data-target="#navcol-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/solicitudes/index">Ingresa y Detalle de Solicitudes</a></li>
+                        <li class="active"><a href="/solicitudesConf2/index">Segunda Confirmación Solicitudes</a></li>
+                        <li class="active"><a href="/solicitudesRpt/index">Reporte</a></li>
+                        <li class="active"><a href="/logout">Log Out</a></li>
+                        <!-- <li class="active"><a href="#">First Item</a></li>
+                        <li><a style="font-size: larger;"  href="#">Second Item</a></li>
+                        <li><a href="#">Third Item</a></li> -->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="container" style="display:flex; flex-wrap:wrap; padding-top: 40px; padding-bottom: 5px; margin-top: 20px;">
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <% if (success && success.length > 0) { %>		
+                <div class="alert alert-success" role="alert">
+                    <%= success %>
+                </div>
+            <% } %>
+
+            <% if (errorList && errorList.length > 0) { %>		
+                <div class="alert alert-success" role="alert">
+                    <h4>Hay errores en los datos enviados</h4>
+                    <ul>
+                        <% errorList.forEach(function(e){ %>
+                            <li><%= e.msg %></li>
+                        <% }) %>    
+                    </ul>
+                </div>
+            <% } %>
+
+
+        </div>	
+
+        <link rel="stylesheet" type="text/css" href="/stylesheets/inicial.css">
+

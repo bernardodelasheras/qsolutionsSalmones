@@ -1,0 +1,173 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasinpaginas.js"></script>
+
+
+    <div class="titulo">
+        <div class="ui main text container" style="width: 70%;">
+            <div class="form">
+                <div class="subform">    
+                    <table>
+                        <tr>
+                            <th>
+                                <h4>Cargos para Usuario <%= dataUsuario.username  %> 
+                                    
+                                </h4>
+                                <a class="btn btn-primary btn-sm" href="/usuarioCargo/index">Cambiar Usuario</a>
+                                <button style="margin-left: 20px;" class="btn btn-primary btn-sm" onclick="configura1();">Administradores</button>
+                                <button class="btn btn-primary btn-sm" onclick="configura2();">Administrador Central</button>
+                                <button class="btn btn-primary btn-sm" onclick="configura3();">Cheff</button>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="titulo" >
+        <div class="ui main text container" style="width: 70%;">
+
+            <div class="form">
+                <div class="subform">
+
+                    <table id="grillasimple" class="display compact" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Descripción</th>
+                                <th>Habilitado</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <% data.forEach(function(e){ %>
+
+                            <tr>
+                                <td> <%= e.idCargo %> </td>
+                                <td> <%= e.nombre %> </td>
+                                    <% if (e.enabled==true) { %>
+                                <td style="align-content: center"> <input style="width: 90px;" type="checkbox" checked ></a>
+                                    <% } else { %>
+                                <td style="align-content: center"> <input style="width: 90px;" type="checkbox" ></a>
+                                    <% } %>
+                            </tr>
+
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary btn-sm" onclick="guardarGrilla();">Guardar</button>
+                </div>    
+                
+            </div>
+            
+        </div>
+        
+    </div>
+
+
+
+<style>
+    .form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<script>
+
+function guardarGrilla() {
+    var datos = [];
+
+    //var idUsuario = $('#idUsuario').text();
+
+    var idUsuario = <%= dataUsuario.idUsuario %>
+
+    $('#grillasimple tr').each(function () {
+        var idCargo = $(this).find("td").eq(0).html();
+        var nombre = $(this).find("td").eq(1).html();
+        var chk = $(this).find('input:checkbox');
+        if (idCargo) {
+           var enabled = chk[0].checked;
+           var d = { idUsuario: idUsuario, idCargo: idCargo, nombre: nombre, enabled: enabled };
+           datos.push(d);
+        }
+    });
+
+ 
+
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify(datos),
+        cache:false,
+        contentType: 'application/json',
+        url: '/usuarioCargo/send',
+        success: function (ret) {
+            swal("Exitoso", "Datos Registrados", "success");
+        }
+    });
+  
+}
+
+function configura1() {
+    $('#grillasimple tr').each(function () {
+        var idCargo = $(this).find("td").eq(0).html();
+        var nombre = $(this).find("td").eq(1).html();
+        var chk = $(this).find('input:checkbox');
+        if (idCargo) {
+            chk.prop('checked', false);
+            var tcargos = ['ASISTENTE','ASISTENTE DE BODEGA','AUXILIAR DE ASEO','CAJERO(A)','DESPACHO','GARZON(A)','POLIFUNCIONAL'];
+            if (tcargos.indexOf(nombre.trim()) != -1) {
+                chk.prop('checked', true);
+            }
+        }
+    });
+}
+
+function configura2() {
+    $('#grillasimple tr').each(function () {
+        var idCargo = $(this).find("td").eq(0).html();
+        var nombre = $(this).find("td").eq(1).html();
+        var chk = $(this).find('input:checkbox');
+        if (idCargo) {
+            chk.prop('checked', false);
+            var tcargos = ['ADMINISTRADOR(A)','CAJERA ENCARGADA','SUBADMINISTRADOR'];
+            if (tcargos.indexOf(nombre.trim()) != -1) {
+                chk.prop('checked', true);
+            }
+        }
+    });
+}
+
+function configura3() {
+    $('#grillasimple tr').each(function () {
+        var idCargo = $(this).find("td").eq(0).html();
+        var nombre = $(this).find("td").eq(1).html();
+        var chk = $(this).find('input:checkbox');
+        if (idCargo) {
+            chk.prop('checked', false);
+            var tcargos = ['AYUDANTE COCINA','BUFFETERO(A)','JEFE COCINA','MAESTRO COCINA','PANADERO','SOUS CHEF'];
+            if (tcargos.indexOf(nombre.trim()) != -1) {
+                chk.prop('checked', true);
+            }
+        }
+    });
+}
+
+</script>
+
+
+<%- include('../partials/footer.ejs') %>

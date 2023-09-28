@@ -1,0 +1,60 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="titulo">
+    <div class="ui main text container segment" style="width: 70%;">
+        <table>
+            <tr>
+                <th>
+                    <h4>Relaciona Usuarios-Cargos</h4>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+
+
+<div class="titulo">
+
+    <div class="ui main text container segment" style="width: 70%;">
+        <form class="ui form" action="/usuarioCargo/index2" method="POST">
+            <div class="subform">
+                <div class="form-group">
+                    <label for="usuario">Usuario</label>
+                    <select class="form-control" data-style="btn-info" id=idUsuario name="data[idUsuario]">
+                        <% data.forEach(function(e){ %>
+                        <option value="<%= e.idUsuario %>"><%= e.username %> - <%= e.nombre %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Definir Privilegios">
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<style>
+    form {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+        border-radius: 5px;
+        background: white;
+        margin: 1rem;
+    }
+
+    .subform {
+        /* width: 30rem; */
+        max-width: 90%;
+        margin: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+
+<%- include('../partials/footer.ejs') %>

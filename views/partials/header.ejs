@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>App.Banpro</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/bootstrap.min.css"> 
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/jquery-ui.min.css">
+        <link rel="stylesheet" href="/stylesheets/lib/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="/stylesheets/lib/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="/stylesheets/lib/responsive.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/lib//pivot.min.css">
+    </head>
+    <body>
+        <script src="/stylesheets/lib/moment.js"></script>
+        <script src="/stylesheets/lib/jquery-3.5.1.js"></script>
+        <script src="/stylesheets/lib/jquery-ui.min.js"></script>
+        <script src="/stylesheets/lib/jquery.dataTables.min.js"></script>
+        <script src="/stylesheets/lib/dataTables.buttons.min.js"></script>
+        <script src="/stylesheets/lib/dataTables.responsive.min.js"></script>
+        <script src="/stylesheets/lib/dataTables.bootstrap.min.js"></script>
+        <script src="/stylesheets/lib/jszip.min.js"></script>
+        <script src="/stylesheets/lib/pdfmake.min.js"></script>
+        <script src="/stylesheets/lib/vfs_fonts.js"></script>
+        <script src="/stylesheets/lib/buttons.html5.min.js"></script>
+        <script src="/stylesheets/lib/bootstrap.js"></script>
+        <script src="/stylesheets/lib/sweetalert.js"></script>
+        <script src="/stylesheets/lib//pivot.min.js"></script>
+        <script src="/stylesheets/lib//pivot.es.min.js"></script>
+
+
+
+
+        <nav class="navbar navbar-fixed-top color-navbar" style="background-color: rgb(255, 255, 255);">
+            <div class="container">
+        
+                <div class="navbar-header">
+
+
+                    <div class="navbar-header">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/" style="margin: 0px; padding: 3px;"><img width="175" height="51" src="/Salmones.jpeg"></a></li>
+                            <li>
+                                <% if (usuarioActual) { %><a href="/">(usuario: <%= usuarioActual.username %>)</a>
+                                    <% } %>
+                            </li>
+                        </ul>
+                    
+                    </div>
+                </div>
+        
+                <div class="collapse navbar-collapse" id="nav-example">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#"></a></li>
+                        <li><a href="#"></a></li>
+                    </ul>
+        
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li>
+                            <div class="dropdown" style="margin-top: 10px; margin-right: 10px; margin-left: 10px" >
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="true">
+                                    Consultas OLAP
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="/olapEmpresa/index">Costo Empresa </a></li>
+                                    <li><a href="/">Costo x Formula</a></li>
+                                    <li><a href="/">Costo x Formula/Local</a></li>
+                                    <li><a href="/">Jornada</a></li>
+                                    <li><a href="/">Festivo</a></li>
+                                    <li><a href="/">Preliquidaciones</a></li>
+                                    <li><a href="/agendaAPILiquidacion/index">Agenda Liquidacion </a></li>
+                                    <li><a href="/periodos/index">Periodos </a></li>
+                                </ul>
+                            </div>
+                        </li>
+
+
+                        <li>
+                            <div class="dropdown" style="margin-top: 10px; margin-right: 10px; margin-left: 10px" hidden="true">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="true">
+                                    RPA 
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="/rpaEmpresa/index">Empresas </a></li>
+                                    <li><a href="/agendaRPAbuk/index">Agendar Robot Contratos BUK </a></li>
+                                    <li><a href="/agendaRPAdt/index">Agendar Robot Contratos DT </a></li>
+                                    <li><a href="/agendaRPAbukFiniquitos/index">Agendar Robot Finiquitos BUK </a></li>
+                                    <li><a href="/agendaRPAdtFiniquitos/index">Agendar Robot Finiquitos DT </a></li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="dropdown" style="margin-top: 10px; margin-right: 10px; margin-left: 10px">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="true">
+                                    Solicitudes 
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="/solicitudes/index">Ingresa y Detalle de Solicitudes</a></li>
+                                    <li><a href="/solicitudesConf2/index">Segunda Confirmación Solicitudes</a></li>
+                                    <li><a href="/solicitudesRpt/index">Reporte</a></li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+
+
+
+                        <li>
+                            <div class="dropdown" style="margin-top: 10px; margin-right: 10px; margin-left: 10px">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="true">
+                                    Administración
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="/usuario/index">Usuarios</a></li>
+                                    <li><a href="/usuarioCargo/index">Usuario Cargo</a></li>
+                                    <li><a href="/motivo/index">Motivos</a></li>
+                                    <li><a href="/valores/index">Valores</a></li>
+                                    <li><a href="/solicitudesConfig/index">Configura Correos</a></li>
+                                    <li><a href="/aplicacion/index">Aplicaciones</a></li>
+                                    <li><a href="/aplicacionDias/index">Días Aplicaciones</a></li>
+                                    <li><a href="/privilegio/index">Privilegios</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/agendaAPIBuk/index">Agendar API datos Personal BUK </a></li>
+                                    <li><a href="/agendaCarga/index">Agenda Integración Solicitudes </a></li>
+                                    <li><a href="/agendaMyAreas/index">Agenda MyAreas </a></li>
+                                    <li><a href="/task/index">Tareas Programadas</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <% if (!usuarioActual) { %>
+                                    <li><a href="/login">Login</a></li>
+                                    <li><a href="/resetpassword">Recuperar Contraseña</a></li>
+                                    <% } else { %>
+                                    <li><a href="/token/index">API Token</a></li>
+                                    <li><a href="/logout">Logout</a></li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </li>
+
+                        
+        
+                    </ul>
+                </div>
+        
+            </div>
+        </nav>
+
+
+
+        <!-- <div class="container" style="display:flex; flex-wrap:wrap; padding-top: 60px; padding-bottom: 15px; margin-top: 20px;"> -->
+        <div class="container" style="padding-top: 50px; padding-bottom: 15px; margin-top: 20px;">
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger fade in" >
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <% if (success && success.length > 0) { %>	
+
+                <div class="alert alert-success fade in" >
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <%= success  %>
+                </div>
+            <% } %>
+
+            <% if (errorList && errorList.length > 0) { %>		
+                <div class="alert alert-success fade in" >
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <h4>Hay errores en los datos enviados</h4>
+                    <ul>
+                        <% errorList.forEach(function(e){ %>
+                            <li><%= e.msg %></li>
+                        <% }) %>    
+                    </ul>
+                </div>
+            <% } %>
+
+
+        </div>	
+
+        <link rel="stylesheet" type="text/css" href="/stylesheets/inicial.css">
+

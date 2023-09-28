@@ -1,0 +1,95 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasinpaginas.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h2 style="margin-top: 0px;">Privilegios Usuario <%= dataUsuario.username %>
+            <a class="btn btn-primary btn-large" href="/privilegio/index">Cambiar Usuario</a>
+            </h2>
+            <label id="idUsuario" hidden><%= dataUsuario.idUsuario %></label>
+        </div>
+    </header>
+
+    <div class="container" >
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Descripción</th>
+                        <th>Ruta</th>
+                        <th>Habilitado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td> <%= e.idAplicacion %> </td>
+                        <td> <%= e.descripcion %> </td>
+                        <td> <%= e.ruta %> </a>
+                            <% if (e.enabled==true) { %>
+                        <td style="align-content: center"> <input style="width: 90px;" type="checkbox" checked ></a>
+                            <% } else { %>
+                        <td style="align-content: center"> <input style="width: 90px;" type="checkbox" ></a>
+                            <% } %>
+                    </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+                
+        
+
+        <button class="btn btn-primary " style="margin-top: 20px; margin-bottom: 30px;"   onclick="guardarGrilla();">Guardar</button>
+
+    </div>
+
+</div>
+
+<script>
+
+function guardarGrilla() {
+    var datos = [];
+
+    var idUsuario = $('#idUsuario').text();
+
+    $('#grillasimple tr').each(function () {
+        var idAplicacion = $(this).find("td").eq(0).html();
+        var descripcion = $(this).find("td").eq(1).html();
+        var ruta = $(this).find("td").eq(2).html();
+        var chk = $(this).find('input:checkbox');
+        if (idAplicacion) {
+           ruta=ruta.replace(/\s{2,10}/g, ' ').trim();
+            
+           var enabled = chk[0].checked;
+           var d = { idUsuario: idUsuario, idAplicacion: idAplicacion, descripcion: descripcion, ruta: ruta, enabled: enabled };
+           datos.push(d);
+        }
+    });
+
+ 
+
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify(datos),
+        cache:false,
+        contentType: 'application/json',
+        url: '/privilegio/send',
+        success: function (ret) {
+            swal("Exitoso", "Datos Registrados", "success");
+        }
+    });
+  
+}
+
+
+</script>
+
+
+<%- include('../partials/footer.ejs') %>

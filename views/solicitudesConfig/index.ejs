@@ -1,0 +1,46 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h3 style="margin-top: 0px;">Configura Correos para Solicitudes</h3>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display compact" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Correo Operaciones</th>
+                        <th>Correo RRHH</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                        <tr>
+                            <td>
+                                <%= e.emailOperaciones %>
+                            </td>
+                            <td>
+                                <%= e.emailRRHH %>
+                            </td>
+                            <td><a href="/solicitudesConfig/<%= e.id %>/edit" class="btn btn-sm btn-primary ">Modificar</a></td>
+                        </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<%- include('../partials/footer.ejs') %>

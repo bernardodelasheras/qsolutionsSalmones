@@ -1,0 +1,51 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px;">
+        <div class="container">
+            <h2 style="margin-top: 0px;">Tareas Programadas</h2>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="row" style="display:flex; flex-wrap:wrap;">
+            <table id="grillasimple" class="display" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Usuario</th>
+                        <th>Aplicacion</th>
+                        <th>Día</th>
+                        <th>Hora</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td> <%= e.idTask %> </td>
+                        <td> <%= e.username %> </td>
+                        <td> <%= e.aplicacion %> </td>
+                        <td> <%= e.dia %> </td>
+                        <td> <%= e.hora %> : <%= e.minuto %> </td>
+                        <td><a href="/task/<%= e.idTask %>/delete" class="btn btn-xs btn-primary ">Eliminar</a>
+                    </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<%- include('../partials/footer.ejs') %>

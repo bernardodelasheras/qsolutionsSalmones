@@ -1,0 +1,61 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grilla.js"></script>
+
+
+    <div class="container">
+
+        <header class="jumbotron" style="padding: 15px; margin-bottom: 10px;">
+            <div class="container">
+                <h2 style="margin: 0px; "> Test de Acceso Empresas
+                    <!-- <a class="btn btn-primary btn-large" style="margin-left: 50px;"
+                        href="/wf_reporteUnidades/index">Volver a
+                        Reporte</a> -->
+                </h2>
+            </div>
+        </header>
+
+
+        <div class="ui main text container ">
+            <table id="grilla" class="display responsive wrap" style="width: 100%; font-size: small; margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>EmpId</th>
+                        <th>Razon Social</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                </tbody>
+            </table>
+    
+
+        </div>
+    </div>
+
+    <script>
+
+        $(function () {
+    
+            var table = $('#grilla').DataTable();
+            table.clear();
+    
+            var d =  <%- JSON.stringify(data) %>;
+    
+            var result = [];
+            d.forEach(e => {
+                result.push([
+                    e.EmpId,
+                    e.EntRazonSocial
+                ]);
+            });
+    
+            table.rows.add(result).draw();
+        });
+    
+    
+    
+    </script>
+
+
+    <%- include('../partials/footer.ejs') %>

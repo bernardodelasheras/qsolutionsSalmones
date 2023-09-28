@@ -1,0 +1,71 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="titulo">
+    <div class="ui main text container segment" style="padding-top: 30px; padding-bottom: 15px">
+        <div class="ui huge header"><h3>Nueva Empresa RPA</h3></div>
+        <br>
+        <form class="ui form" action="/rpaEmpresa/rpaEmpresas" method="POST">
+
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input class="form-control" id="nombre" type="text" name="data[nombre]" placeholder="Nombre Empresa"
+                    value="<%= data.nombre %>">
+            </div>
+
+            <div class="form-group">
+                <label for="url">URL Buk</label>
+                <input class="form-control" id="urlbuk" type="text" name="data[urlbuk]" placeholder="URL BUK"
+                    value="<%= data.urlbuk %>">
+            </div>
+
+            <div class="form-group">
+                <label for="usuario">Usuario Buk</label>
+                <input class="form-control" id="usernamebuk" type="text" name="data[usernamebuk]" placeholder="Usuario"
+                    value="<%= data.usernamebuk %>">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña Buk</label>
+                <input class="form-control" id="passwordbuk" type="password" name="data[passwordbuk]" placeholder="Contraseña Buk"
+                    value="<%= data.passwordbuk %>">
+            </div>
+
+            <div class="form-group">
+                <label for="meses">Meses a Procesar</label>
+                <input class="form-control" id="meses" type="meses" name="data[meses]" placeholder="Meses a Procesar"
+                    value="<%= data.meses %>">
+            </div>
+
+            <div class="form-group">
+                <label for="url">URL DT</label>
+                <input class="form-control" id="urldt" type="text" name="data[urldt]" placeholder="URL DT"
+                    value="<%= data.urldt %>">
+            </div>
+            
+            <div class="form-group">
+                <label for="usuario">Usuario DT</label>
+                <input class="form-control" id="usernamedt" type="text" name="data[usernamedt]" placeholder="Usuario DT"
+                    value="<%= data.usernamedt %>">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña DT</label>
+                <input class="form-control" id="passworddt" type="password" name="data[passworddt]" placeholder="Contraseña DT"
+                    value="<%= data.passworddt %>">
+            </div>
+
+            <div class="form-group">
+                <label for="emaillog">EMail Supervisor</label>
+                <input class="form-control" id="emaillog" type="emaillog" name="data[emaillog]" placeholder="EMail"
+                    value="<%= data.emaillog %>">
+            </div>
+
+            <input class="ui primary button" type="submit" value="Guardar">
+
+        </form>    
+
+
+    </div>
+</div>
+
+<%- include('../partials/footer.ejs') %>
