@@ -2,9 +2,11 @@ var Sequelize = require('sequelize');
 require('dotenv').config({ path: 'variables.env' });
 
 var host = process.env.SQLLOCAL;
+var usu = process.env.SQLFIN700LOCALUSR
 var pwd = process.env.SQLFIN700LOCALPWD
+var baseDatos = process.env.DATABASELOCAL
 
-const sequelize = new Sequelize('qsolutionsSalmones', 'sa', pwd, {
+const sequelize = new Sequelize(baseDatos, usu, pwd, {
     host: host,
     dialect: 'mssql',
     dialectOptions: {
