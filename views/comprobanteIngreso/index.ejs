@@ -1,0 +1,77 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="titulo">
+    <div class="ui main text container segment" style="padding-top: 30px; padding-bottom: 15px">
+        <div class="ui huge header">
+            <h3>Envío Comprobante de Ingreso</h3>
+        </div>
+        <br>
+
+        <form class="ui form" action="/comprobanteIngreso/index" method="POST" id="formulario">
+
+            <div class="form-group" style="padding-left: 15px; margin-bottom: 0px;">
+               <div class="row" style="display:flex; flex-wrap:wrap;">
+
+
+                    <div class="form-group" >
+                        <label for="TipoOpeId">Tipo Operación</label>
+                        <select class="form-control" id=TipoOpeId name="data[TipoOpeId]" style="width: 200px">
+                            <% motivos.forEach(function(e){ %>
+                                <option value="<%= e.TipoOpeId %>">
+                                    <%= e.OpeGlosa %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group" >
+                        <label for="CabOpeNumero">Número</label>
+                        <input class="form-control" id="CabOpeNumero" type="number" name="data[CabOpeNumero]" 
+                            value="<%= data.CabOpeNumero %>" style="width: 150px">
+                    </div>
+
+                    <div class="form-group" >
+                        <label for="Fecha">Fecha Desde</label>
+                        <input class="form-control" id="fechadesde" type="date" name="data[fechadesde]" 
+                            value="<%= data.fechadesde %>" style="width: 150px">
+                    </div>
+
+                    <div class="form-group" >
+                        <label for="Fecha">Fecha Hasta</label>
+                        <input class="form-control" id="fechahasta" type="date" name="data[fechahasta]" 
+                            value="<%= data.fechahasta %>" style="width: 150px">
+                    </div>
+
+                    <input class="btn btn-primary " type="submit" id="ButtonProcesa" value="Buscar" style="height: 35px; margin-top: 25px; margin-left: 5px;">
+
+                    <!-- <input class="btn btn-primary " type="submit" id="ButtonProcesa2" value="Test PDF"
+                    formaction="/solicitudesRpt/indexPdf" method="POST" style="height: 35px; margin-top: 25px; margin-left: 5px;"> -->
+
+
+               </div>
+            </div>
+
+
+            
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    $(function () {
+        $('#ButtonProcesa').click(function () {
+            $('#formulario').append('<div class="loader" id="loader-7"></div>');
+            $('#ButtonProcesa').hide();
+        });
+    });
+
+
+
+</script>
+
+
+<%- include('../partials/footer.ejs') %>

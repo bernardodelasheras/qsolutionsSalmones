@@ -66,15 +66,6 @@ var solicitudesConfig = require("./models/solicitudesConfig");
 var aplicacionDias = require("./models/aplicacionDias");
 
 var wf_fase = require("./models/wf_fase");
-// wf_fase.create({
-//     nombre: 'Reserva',
-//     estado: 0
-// }).then((r)=>{
-//        console.log("created: "+r); 
-//     }).catch((err)=>{
-//        console.log(err);
-//     });
-
 var wf_hito = require("./models/wf_hito");
 var wf_proyecto = require("./models/wf_proyecto");
 var wf_movimiento = require("./models/wf_movimiento");

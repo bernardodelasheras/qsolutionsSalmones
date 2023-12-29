@@ -52,7 +52,7 @@
         "puppeteer": "^19.4.0",
         "request": "^2.88.0",
         "selenium-webdriver": "^4.0.0",
-        "sequelize": "^6.33.0",
+        "sequelize": "^6.3.5",
         "sweetalert": "^2.1.2",
         "tedious": "^9.2.1",
         "xlgen": "^0.2.3-1"

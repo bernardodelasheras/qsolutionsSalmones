@@ -1,0 +1,86 @@
+<%- include('../partials/headerMobile.ejs') %>
+
+<script src="/stylesheets/grilla.js"></script>
+
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px; margin-bottom: 10px;">
+        <div class="container">
+            <strong style="margin: 0px; "> Reporte Solicitudes
+                <a class="btn btn-primary btn-large" style="margin-left: 50px;" 
+                href="/solicitudesRpt/index">Volver</a>
+            </strong>
+        </div>
+    </header>
+
+
+    <div class="ui main text container ">
+
+        <table id="grilla" class="display responsive wrap" style="width: 100%; font-size: small; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Nro.<br> Solicitud</th>
+                    <th>Fecha</th>
+                    <th>Solicitante</th>
+                    <th>Motivo</th>
+                    <th>Fecha<br> Reemplazo</th>
+                    <th>Cargo<br> Reemplazante</th>
+                    <th>Reemplazante</th>
+                    <th>Centro de<br> Costos</th>
+                    <th>Valor<br> Bruto</th>
+                    <th>Cargo<br> Reemplazado</th>
+                    <th>Reemplazado</th>
+                    <th>Explicacion</th>
+                    <th>Estado</th>                    
+                    <th>Confirmado<br>por</th>
+                    <th>Fecha<br>Confirmación</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+
+        var table = $('#grilla').DataTable();
+        table.clear();
+
+        var d =  <%- JSON.stringify(data) %>;
+
+        var result = [];
+        d.forEach(e => {
+            result.push([
+                e.NroSolicitud,
+                e.Fecha,
+                e.Solicitante,
+                e.Motivo,
+                e.FechaReemplazo,
+                e.CargoReemplazante,
+                e.Reemplazante,
+                e.Centro,
+                e.Valor,
+                e.CargoReemplazado,
+                e.Reemplazado,
+                e.Explicacion,
+                e.Estado,
+                e.ConfirmadoPor,
+                e.FechaConfirmacion
+            ]);
+        });
+
+        table.rows.add(result).draw();
+    });
+
+
+
+</script>
+
+
+<%- include('../partials/footer.ejs') %>

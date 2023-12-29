@@ -3,7 +3,7 @@ require('dotenv').config({ path: 'variables.env' });
 
 var host = process.env.SQLFIN700;
 
-const sequelize = new Sequelize('fin700', 'consulta_banpro', 'AlfaBanca2018', {
+const sequelize = new Sequelize('fin700', 'Consulta_RioNapo', 'Con2014RioNapo', {
     host: host,
     dialect: 'mssql',
     dialectOptions: {
