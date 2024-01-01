@@ -64,37 +64,13 @@ router.post("/login", function (req, res) {
                         req.flash("success", "Usuario o contraseña inválida");
                         res.redirect("/login");
                     } else {
-                        bukPersona.findOne({where: { idBuk: data.idBuk }})
-                        .then(dataPersona =>{
-                            if (dataPersona) {
-                                if (dataPersona.status != 'activo') {
-                                    req.session.isLoggedIn = false;
-                                    req.session.idUsuario = 0;
-                                    req.session.username = "";
-                                    req.session.useremail = "";
-                                    req.session.usernombre = "";
-                                    req.flash("success", "Empleado Asociado a Usuario " + req.body.data.username + " Finiquitado");
-                                    res.redirect("/login");
-                                } else {
-                                    req.session.isLoggedIn = true;
-                                    req.session.idUsuario = data.idUsuario;
-                                    req.session.username = data.username;
-                                    req.session.useremail = data.email;
-                                    req.session.usernombre = data.nombre;
-                                    res.locals.usuarioActual = { username: data.username };
-                                    res.redirect("/");
-                                }
-                            } else {
-                                req.session.isLoggedIn = false;
-                                req.session.idUsuario = 0;
-                                req.session.username = "";
-                                req.session.useremail = "";
-                                req.session.usernombre = "";
-                                req.flash("success", "Empleado Asociado a Usuario " + req.body.data.username + " No Existe");
-                                res.redirect("/login");
-                            }
-                        })
-                        .catch (err=>{console.log(err)}) 
+                        req.session.isLoggedIn = true;
+                        req.session.idUsuario = data.idUsuario;
+                        req.session.username = data.username;
+                        req.session.useremail = data.email;
+                        req.session.usernombre = data.nombre;
+                        res.locals.usuarioActual = { username: data.username };
+                        res.redirect("/");
                     }
                 });
             } else {

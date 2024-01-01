@@ -37,20 +37,14 @@ router.post("/usuarios", middleware.isValidusuarioNew, function (req, res) {
     bcrypt.hash(req.body.data.password, saltRounds, function (err, hash) {
         var item = {
             nombre: req.body.data.nombre, username: req.body.data.username,
-            password: hash, email: req.body.data.email, idBuk: req.body.data.idBuk
+            password: hash, email: req.body.data.email, idBuk: 0
         };
         usuario.create(item)
             .then(datanew => {
                 res.redirect("/usuario/index");
             })
             .catch(err => {
-                var errorList = [{ location: "create", param: "usuario", msg: err, value: "0" }]
-                leePersonas()
-                    .then(personas=>{
-                        data.password=""
-                        res.render("usuario/new", { data: item, personas: personas, errorList: errorList });
-                    })
-                    .catch(err=>{console.log(err)})
+                console.log(err)
             })
     });
 });

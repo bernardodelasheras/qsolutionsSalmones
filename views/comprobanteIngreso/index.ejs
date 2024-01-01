@@ -3,31 +3,41 @@
 <div class="titulo">
     <div class="ui main text container segment" style="padding-top: 30px; padding-bottom: 15px">
         <div class="ui huge header">
-            <h3>Envío Comprobante de Ingreso</h3>
+            <h2>Envío Comprobante de Ingreso</h2>
+            <h4>Selección de Documento</h4>
         </div>
         <br>
 
-        <form class="ui form" action="/comprobanteIngreso/index" method="POST" id="formulario">
+        <form class="ui form" action="/comprobanteIngreso/indexdetalle" method="POST" id="formulario">
 
             <div class="form-group" style="padding-left: 15px; margin-bottom: 0px;">
                <div class="row" style="display:flex; flex-wrap:wrap;">
 
+                <div class="form-group">
+                    <label for="paciente">Empresa</label>
+                    <select class="form-control" data-style="btn-info" id=empid name="data[empid]"
+                        onchange="empidChange();">
+                        <% data.empresas.forEach(function(e){ %>
+                        <% if (e.empid===14) { %>
+                        <option value="<%= e.empid %>" selected> <%= e.EntRazonSocial %> </option>
+                        <% } else { %>
+                        <option value="<%= e.empid %>"> <%= e.EntRazonSocial %> </option>
+                        <% } %>
+                        <% }) %>
+                    </select>
+                </div>
+    
+
 
                     <div class="form-group" >
-                        <label for="TipoOpeId">Tipo Operación</label>
-                        <select class="form-control" id=TipoOpeId name="data[TipoOpeId]" style="width: 200px">
-                            <% motivos.forEach(function(e){ %>
-                                <option value="<%= e.TipoOpeId %>">
-                                    <%= e.OpeGlosa %>
-                                </option>
-                            <% }) %>
-                        </select>
+                        <label for="CabOpeNumero">Operación Desde</label>
+                        <input class="form-control" id="CabOpeNumeroDesde" type="number" name="data[CabOpeNumeroDesde]" 
+                            value="<%= data.CabOpeNumeroDesde %>" style="width: 150px">
                     </div>
-
                     <div class="form-group" >
-                        <label for="CabOpeNumero">Número</label>
-                        <input class="form-control" id="CabOpeNumero" type="number" name="data[CabOpeNumero]" 
-                            value="<%= data.CabOpeNumero %>" style="width: 150px">
+                        <label for="CabOpeNumero">Operación Hasta</label>
+                        <input class="form-control" id="CabOpeNumeroHasta" type="number" name="data[CabOpeNumeroHasta]" 
+                            value="<%= data.CabOpeNumeroHasta %>" style="width: 150px">
                     </div>
 
                     <div class="form-group" >

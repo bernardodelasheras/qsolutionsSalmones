@@ -1,0 +1,54 @@
+<%- include('../partials/header.ejs') %>
+
+<script src="/stylesheets/grillasimple.js"></script>
+
+
+<div class="container">
+
+    <header class="jumbotron" style="padding: 15px; margin-bottom: 10px;">
+        <div class="container">
+            <h3 style="margin: 0px; "> Comprobantes de Ingreso
+                <a class="btn btn-primary btn-large" style="margin-left: 50px;" 
+                href="/comprobanteIngreso/index">Volver</a>
+            </h3>
+        </div>
+    </header>
+
+
+    <div class="ui main text container ">
+
+        <table id="grillasimple" class="display responsive wrap" style="width: 100%; font-size: small; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Tipo Cbte.</th>
+                    <th>Nro. Cbte.</th>
+                    <th>Glosa Cbte.</th>
+                    <th>Operación</th>
+                    <th>Fecha</th>
+                    <th>Glosa Operación</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(function(e){ %>
+
+                    <tr>
+                        <td> <%= e.TcoGlosa %> </td>
+                        <td> <%= e.ComNumero %> </td>
+                        <td> <%= e.ComGlosa %> </td>
+                        <td> <%= e.CabOpeNumero %> </td>
+                        <td> <%= e.CabOpeFecha %> </td>
+                        <td> <%= e.CabOpeGlosa %> </td>
+                        <td><a href="/comprobanteIngreso/<%= e.CabOpeId %>/imprime" class="btn btn-xs btn-primary ">Enviar</a>
+                    </tr>
+
+                <% }) %>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<%- include('../partials/footer.ejs') %>

@@ -22,11 +22,11 @@ var mailPwd = process.env.MAIL_CONTRASENA;
 var mailPort = process.env.MAIL_SMTPPORT;
 
 //router.get("/index", middleware.isLoggedIn, function (req, res) {
-router.get("/index", function (req, res) {
+router.get("/index", middleware.isLoggedIn, function (req, res) {
     let dIni = new Date()
     dIni.setDate(dIni.getDate()-30)
     fIni = dIni.toLocaleString().split(' ')[0].split('-')
-    dia = '16'
+    dia = '01'
     mes = fIni[1]
     ano = fIni[2]
     let fechaDesde = ano + '-' + mes + '-' + dia
@@ -34,32 +34,52 @@ router.get("/index", function (req, res) {
     let dFin = new Date()
     dFin.setDate(dIni.getDate())
     fFin = dFin.toLocaleString().split(' ')[0].split('-')
-    dia = '15'
+    dia = fFin[0]
     mes = fFin[1]
     ano = fFin[2]
     let fechaHasta = ano + '-' + mes + '-' + dia
 
-
-
-    let data = {fechadesde: fechaDesde, fechahasta: fechaHasta}
-
-    let isMobile = req.session.isMobile
-    if (!isMobile) {
-        res.render("solicitudesRpt/index", { data: data })
-    } else {
-        res.render("solicitudesRpt/indexMobile", { data: data })
-    }
+    leeEmpresas()
+        .then(empresas => {
     
+            let data = {fechadesde: fechaDesde, fechahasta: fechaHasta, 
+                        CabOpeNumeroDesde: 0, CabOpeNumeroHasta: 0, empid: 14, 
+                        empresas: empresas}
+
+            let isMobile = req.session.isMobile
+            if (!isMobile) {
+                res.render("comprobanteIngreso/index", { data: data })
+            } else {
+                res.render("solicitudesRpt/indexMobile", { data: data })
+            }
+        
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
 });
 
-router.post("/index", function (req, res) {
+router.post("/indexdetalle", middleware.isLoggedIn, function (req, res) {
     req.body.data.body = req.sanitize(req.body.data.body);
-    var taskdata = {
+    var parametros = {
+        empid: req.body.data.empid, 
         fechadesde: req.body.data.fechadesde, 
         fechahasta: req.body.data.fechahasta, 
+        CabOpeNumeroDesde: req.body.data.CabOpeNumeroDesde, 
+        CabOpeNumeroHasta: req.body.data.CabOpeNumeroHasta, 
         sessionID: req.sessionID
     }
-    procesaConsulta('grilla', req, res, taskdata);
+
+    leeCabeceras(parametros)
+        .then(data=>{
+            res.render("comprobanteIngreso/indexdetalle", { data: data });
+        })
+        .catch(err=>{
+            console.log(err)
+        })    
+
+
 });
 
 var printHeader = async function (doc) {
@@ -68,7 +88,12 @@ var printHeader = async function (doc) {
 }
 
 
-router.post("/indexPdf", middleware.isLoggedIn, async function (req, res) {
+router.get("/:id/imprime", middleware.isLoggedIn, async function (req, res) {
+
+    var CabOpeId = req.params.id
+    var datDocOri = await leeDocIngreso(CabOpeId).catch(err=>{console.log(err.message)})
+
+
     var doc = new PDFDocument({ size: 'LETTER', margin: 50 });
     // Stream the PDF to a file
     const outputPath = 'tmp/invoice.pdf';
@@ -84,13 +109,13 @@ router.post("/indexPdf", middleware.isLoggedIn, async function (req, res) {
     
       // Header Information
       doc.fontSize(6);
-      doc.lineGap(3).text('Número: 10125',500);
-      doc.lineGap(3).text('Fecha: 24/07/2023');
+      doc.lineGap(3).text('Número: '+datDocOri[0].CabOpeNumero,500);
+      doc.lineGap(3).text('Fecha: ' + datDocOri[0].CabOpeFecha);
     
       doc.lineGap(3).text('Empresa: Salmones Pacific Star S.A. / Trusal S.A. / ComSur Ltda.',50);
       doc.lineGap(3).text(' ')
       doc.lineGap(3).text('Para: Tesorería, Contabilidad, Gerencia Comercial')
-      doc.lineGap(3).text('Emitida Por: MARIA JOSE ASTUDILLO PEREZ')
+      doc.lineGap(3).text('Emitida Por: '+req.session.usernombre)
       doc.lineGap(3).text(' ')
       doc.fontSize(7).lineGap(3).text('FACTURAS QUE PAGA', { align: 'center'})
     
@@ -98,64 +123,102 @@ router.post("/indexPdf", middleware.isLoggedIn, async function (req, res) {
       const tableHeaders = ['Nº Factura','Fecha Factura','Flete','RUT','Cliente','Moneda','Monto Factura','Monto Pago'];
     
        // Table setup
-       var tableTop = 190;
+       var tableTop = 200;
        var tableLeft = 50;
-       var rowHeight = 20;
+       var rowHeight = 40;
        var colWidth = 65;
        var cellPadding = 10;
-     
+
+       var ancho=[]
+       ancho[0]=50 //Nro
+       ancho[1]=50 //Fecha
+       ancho[2]=50 //Flete
+       ancho[3]=50 //Rut
+       ancho[4]=95
+       ancho[5]=65 //Rut
+       ancho[6]=65 //Rut
+       ancho[7]=65 //Rut       
+       
+
        // Draw table headers
        doc.lineWidth(0.5).rect(tableLeft, tableTop, (colWidth * tableHeaders.length)+10, rowHeight).stroke();
        doc.fontSize(5);
-       tableHeaders.forEach((header, index) => {
-         doc.fontSize(7).text(header, tableLeft + index * colWidth, tableTop + cellPadding, { width: colWidth, align: 'center' });
-       });
+        tableHeaders.forEach((header, index) => {
+
+         //colWidth=ancho[index]
+
+         
+
+         if (index > 5) {
+            doc.fontSize(7).text(header, tableLeft + index * colWidth, tableTop + cellPadding, { width: colWidth, align: 'right' });
+        } else if (index == 5) {
+            doc.fontSize(7).text(header, tableLeft + index * colWidth, tableTop + cellPadding, { width: colWidth, align: 'center' });
+        } else if (index == 4) {
+            doc.fontSize(7).text(header, tableLeft + index * colWidth, tableTop + cellPadding, { width: colWidth, align: 'left' });
+        } else  {
+            doc.fontSize(7).text(header, tableLeft + index * colWidth, tableTop + cellPadding, { width: colWidth, align: 'center' });
+        }
+
+
+
+        });
     
   
       // Page Header
     
+
+    var monedaDoc = datDocOri[0].MonGlosa
+    var MonSimbolo = datDocOri[0].MonSimbolo
+    var CabOpeFecha = datDocOri[0].CabOpeFecha
+
+    var docBanco = " "
+    var Banco = " "
+    var datBco = await leeDatosBanco(CabOpeId).catch(e=>{console.log(e.message)})
+    if (datBco.length>0){
+        docBanco=datBco[0].TdoGlosa
+        Banco=datBco[0].Banco
+    }
+
+    console.log("CabOpeId: "+CabOpeId)
       
     // Sample Table Data (you can replace this with your actual data)
     var totFactura=0.0
     var totPago=0.0
     var tableData = []
+    for (var data of datDocOri) {
 
-    var valorFactura = 180695
-    var valorPago = 180540
-    var fila = ['6712', 
-                '05/06/2023', 
-                '0', 
-                '5393-7', 
-                'MIDA FOODS', 
-                'dólar', 
-                '$ '+formatNumber(valorFactura), 
-                '$ '+formatNumber(valorPago)]
-    for (var i = 0;i < 19; i++) {
-          tableData.push(fila)
-          totFactura += 180695
-          totPago += 180540
+
+        var datFactura = await leeValorFactura(data.pEmpId, data.TdoId, data.DocCceNumero).catch(e=>{console.log(e)})
+        var valorFactura=0
+        if (datFactura.length>0) {
+            valorFactura=datFactura[0].MovCceMontoImpuDebe
+        }
+
+        var fila = [
+            data.DocCceNumero, 
+            data.DocCceFecEmi, 
+            '0', 
+            data.EntRut, 
+            data.EntRazonSocial.slice(0,48), 
+            data.MonGlosa, 
+        '$ '+formatNumber(valorFactura), 
+        '$ '+formatNumber(data.MovCceMontoImpuHaber)]
+
+        totFactura += valorFactura
+        totPago += data.MovCceMontoImpuHaber
+
+        tableData.push(fila)
+
     }
 
-    var valorFactura = 8069
-    var valorPago = 8054
-    totFactura += valorFactura
-    totPago += valorPago
-var fila = ['6712', 
-                '05/06/2023', 
-                '0', 
-                '5393-7', 
-                'MIDA FOODS', 
-                'dólar', 
-                '$ '+formatNumber(valorFactura), 
-                '$ '+formatNumber(valorPago)]
-    tableData.push(fila)
+    var gto = totPago-totFactura 
     
     var lineas=0
     // Draw table rows
     doc.fontSize(5);
     tableData.forEach(async (rowData, rowIndex) => {
   
-      if (lineas >= 20) {
+      if (lineas >= 10) {
   
           // Page Header
           doc.addPage({ size: 'LETTER', margin: 50 });
@@ -165,13 +228,13 @@ var fila = ['6712',
       
           // Header Information
           doc.fontSize(6);
-          doc.lineGap(3).text('Número: 10125',500);
-          doc.lineGap(3).text('Fecha: 24/07/2023');
-      
+          doc.lineGap(3).text('Número: '+datDocOri[0].CabOpeNumero,500);
+          doc.lineGap(3).text('Fecha: ' + datDocOri[0].CabOpeFecha);
+          
           doc.lineGap(3).text('Empresa: Salmones Pacific Star S.A. / Trusal S.A. / ComSur Ltda.',50);
           doc.lineGap(3).text(' ')
           doc.lineGap(3).text('Para: Tesorería, Contabilidad, Gerencia Comercial')
-          doc.lineGap(3).text('Emitida Por: MARIA JOSE ASTUDILLO PEREZ')
+          doc.lineGap(3).text('Emitida Por: '+req.session.usernombre)
           doc.lineGap(3).text(' ')
           doc.fontSize(7).lineGap(3).text('FACTURAS QUE PAGA', { align: 'center'})
       
@@ -179,9 +242,9 @@ var fila = ['6712',
           const tableHeaders = ['Nº Factura','Fecha Factura','Flete','RUT','Cliente','Moneda','Monto Factura','Monto Pago'];
       
           // Table setup
-          tableTop = 190;
+          tableTop = 200;
           tableLeft = 50;
-          rowHeight = 20;
+          rowHeight = 40;
           colWidth = 65;
           cellPadding = 10;
       
@@ -189,7 +252,11 @@ var fila = ['6712',
           doc.lineWidth(0.5).rect(tableLeft, tableTop, (colWidth * tableHeaders.length)+10, rowHeight).stroke();
           doc.fontSize(5);
           tableHeaders.forEach((header, index) => {
+             //colWidth=ancho[index]
              doc.fontSize(7).text(header, tableLeft + index * colWidth, tableTop + cellPadding, { width: colWidth, align: 'center' });
+
+             
+
           });
       
   
@@ -201,9 +268,14 @@ var fila = ['6712',
       lineas++
       doc.lineWidth(0.2).rect(tableLeft, yPos, (colWidth * tableHeaders.length) + 10, rowHeight).stroke();
       rowData.forEach((cellData, colIndex) => {
+        //colWidth=ancho[colIndex]
         if (colIndex > 5) {
             doc.fontSize(6).text(cellData, tableLeft + colIndex * colWidth, yPos + cellPadding, { width: colWidth, align: 'right'});
-        } else {
+        } else if (colIndex == 5) {
+            doc.fontSize(6).text(cellData, 15 + tableLeft + colIndex * colWidth, yPos + cellPadding, { width: colWidth, align: 'center'});
+        } else if (colIndex == 4) {
+            doc.fontSize(6).text(cellData, tableLeft + colIndex * colWidth, yPos + cellPadding, { width: colWidth, align: 'left'});
+        } else  {
             doc.fontSize(6).text(cellData, tableLeft + colIndex * colWidth, yPos + cellPadding, { width: colWidth, align: 'center' });
         }
       });
@@ -218,7 +290,7 @@ var fila = ['6712',
     cellPadding=10
     tableFooter.forEach((header, index) => {
         if (index<5) {
-           doc.fontSize(6).text(header, tableLeft + index * colWidth, yPos + cellPadding, { width: colWidth, align: 'center' });
+           doc.fontSize(6).text(header, tableLeft + index * colWidth, yPos + cellPadding, { width: colWidth, align: 'left' });
         } else {
            doc.fontSize(6).text(header, tableLeft + index * colWidth, yPos + cellPadding, { width: colWidth, align: 'right' });
         }
@@ -233,20 +305,20 @@ var fila = ['6712',
     doc.lineWidth(0.2).rect(tableLeft, yPos, (colWidth * tableHeaders.length) + 10, rowHeight).stroke();
 
     yPos += 5
-    doc.text('Fecha Recepción: 24/07/2023',80, yPos, {lineBreak: false})
+    doc.text('Fecha Recepción: '+CabOpeFecha, 80, yPos, {lineBreak: false})
     doc.text('Fecha Documento: Detalle',400)
     yPos += 10
-    doc.text('Tipo de Pago: Depósito',80, yPos, {lineBreak: false})
+    doc.text('Tipo de Pago: '+docBanco,80, yPos, {lineBreak: false})
     doc.text('Nº Documento: Detalle',400)
     yPos += 10
-    doc.text('Banco: BCI',80, yPos, {lineBreak: false})
-    doc.text('Moneda Pago: DOLAR',400)
+    doc.text(Banco,80, yPos, {lineBreak: false})
+    doc.text('Moneda Pago: '+monedaDoc,400)
     yPos += 10
     doc.text(' ',80, yPos, {lineBreak: false})
-    doc.text('Monto Recibido: '+'US$ '+formatNumber(totPago),400)
+    doc.text('Monto Recibido: '+MonSimbolo+' '+formatNumber(totPago),400)
     yPos += 10
     doc.text(' ',80, yPos, {lineBreak: false})
-    doc.text('GTO: -155,00',400)
+    doc.text('GTO: '+'$ '+formatNumber(gto), 400)
 
     doc.text(' ',50)
     doc.fontSize(7).lineGap(3).text('Observaciones', { align: 'center'})
@@ -261,7 +333,7 @@ var fila = ['6712',
     doc.end();
   
     console.log('PDF generated successfully at', outputPath);
-    res.redirect("/solicitudesRpt/index")
+    res.redirect("/comprobanteIngreso/index")
 
   });
 
@@ -370,85 +442,6 @@ var reprograma = function (taskdata, idTask) {
 }
 
 
-function procesaConsulta(tipoConulta, req, res, taskdata) {
-
-    var returnMessage = "";
-    sequelize.query('solicitudesRptv2 :param1, :param2, :param3',
-        {
-            replacements: { param1: taskdata.fechadesde, param2: taskdata.fechahasta, param3: returnMessage },
-            type: sequelize.QueryTypes.SELECT
-        })
-        .then(data => {
-            console.log("Procedimiento Procesado");
-            if (tipoConulta == 'excel') {
-                generaExcel(data, req, res, taskdata);
-            } else {
-                var headers = "";
-                if (data.length > 0) {
-                    Object.getOwnPropertyNames(data[0]).forEach(function (n) {
-                        headers += '<th>' + n + '</th>';
-                    });
-                } else {
-                    headers = "No hay Datos Para Mostrar"
-                }
-                let isMobile = req.session.isMobile
-                if (!isMobile) {
-                    res.render("solicitudesRpt/indexReporte", { data: data, headers: headers });
-                } else {
-                    res.render("solicitudesRpt/indexReporteMobile", { data: data, headers: headers });
-                }
-                
-            }
-
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
-}
-
-function generaExcel(data, req, res, taskdata) {
-    var ses = Date.now();
-    var nombreArchivo = 'tmp/ReporteDetalladoWorkflow_' + ses + '.csv'
-    const fs = require('fs');
-
-    let writeStream = fs.createWriteStream(nombreArchivo);
-    var headers = "";
-    Object.getOwnPropertyNames(data[0]).forEach(function (n) {
-        headers += '"' + n + '";';
-    });
-    writeStream.write(headers + "\n", "ascii");
-
-    data.forEach(function (d) {
-
-        var linea = "";
-        Object.getOwnPropertyNames(d).forEach(function (val, idx, array) {
-            if (typeof d[val] === 'number') {
-                valor = d[val].toString().replace('.', ',');
-            } else {
-                if (d[val] != null) {
-                    valor = d[val].toString();
-                } else {
-                    valor = ' ';
-                }
-            }
-            linea += '"' + valor + '";';
-        });
-        writeStream.write(linea + "\n", "ascii");
-    });
-
-    writeStream.end();
-
-    writeStream.on("finish", () => {
-        var nombrecomprimido = nombreArchivo + ".zip"
-        compressing.gzip.compressFile(nombreArchivo, nombrecomprimido)
-            .then(() => {
-                console.log('Archivo excel generado en ' + nombreArchivo);
-                enviaCorreo(nombrecomprimido, req, res, taskdata);
-            })
-            .catch((err) => { console.log("error compresion " + err) });
-    })
-}
 
 function enviaCorreo(nombreArchivo, req, res, taskdata) {
 
@@ -522,12 +515,186 @@ var leeProyectos = function (empid, usuario) {
     });
 };
 
+var leeCabeceras = function (p) {
+    return new Promise(function (resolve, reject) {
+        var sql = ""
+        sql += "select ConT_CabeceraCom.pEmpId, "
+        sql += "       ConT_CabeceraCom.TcoId, "
+        sql += "       rtrim(ConT_TipoComprobante.TcoGlosa) TcoGlosa, "
+        sql += "       ConT_CabeceraCom.ComNumero, "
+        sql += "       rtrim(ConT_CabeceraCom.ComGlosa) ComGlosa, "
+        sql += "       ConT_CabeceraOpe.CabOpeNumero, "
+        sql += "       convert(varchar, ConT_CabeceraOpe.CabOpeFecha, 23) CabOpeFecha, "
+        sql += "       rtrim(ConT_CabeceraOpe.CabOpeGlosa) CabOpeGlosa, "
+        sql += "       ConT_CabeceraCom.CabCompId, "
+        sql += "       ConT_CabeceraOpe.CabOpeId "
+        sql += "  from ConT_CabeceraOpe left join "
+        sql += "       ConT_CabeceraCom on ConT_CabeceraCom.CabCompId = ConT_CabeceraOpe.pCabCompId left join "
+        sql += "       ConT_TipoComprobante on ConT_CabeceraCom.TcoId = ConT_TipoComprobante.TcoId  "
+        sql += "                           and ConT_CabeceraCom.pEmpId = ConT_TipoComprobante.pEmpId "
+        sql += " where ConT_CabeceraCom.pEmpId = " + p.empid
+        sql += "   and ConT_CabeceraCom.TcoId = 1 "
+        sql += "   and convert(varchar, ConT_CabeceraOpe.CabOpeFecha, 23) between '"+ p.fechadesde + "' and '"+ p.fechahasta +"'"
+
+        if (p.CabOpeNumeroDesde != 0 || p.CabOpeNumeroHasta != 0) {
+            sql += "   and ConT_CabeceraOpe.CabOpeNumero between "+ p.CabOpeNumeroDesde + " and "+ p.CabOpeNumeroHasta
+        }
+
+        
+        sequelize.query(sql)
+            .then(data => {
+                resolve(data[0]);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+};
+
+var leeDocIngreso = function (CabOpeId) {
+    return new Promise(function (resolve, reject) {
+        var sql = ""
+        sql += "select CceT_Documentos.pEmpId, "
+        sql += "       ConT_CabeceraCom.TcoId, "
+        sql += "       convert(varchar, ConT_CabeceraOpe.CabOpeFecha, 103) CabOpeFecha, "
+        sql += "       ConT_TipoComprobante.TcoGlosa, "
+        sql += "       ConT_CabeceraCom.ComNumero, "
+        sql += "       ConT_CabeceraCom.ComGlosa, "
+        sql += "       ConT_CabeceraOpe.CabOpeNumero, "
+        sql += "       ConT_CabeceraOpe.CabOpeGlosa, "
+        sql += "       CceT_Documentos.TdoId, "
+        sql += "       Glbt_Documentos.TdoGlosa, "
+        sql += "       CceT_Documentos.DocCceNumero, "
+        sql += "       convert(varchar, CceT_Documentos.DocCceFecEmi, 103) DocCceFecEmi,"
+        sql += "       GlbT_Entidad.EntRut, "
+        sql += "       GlbT_Entidad.EntRazonSocial, "
+        sql += "       GlbT_Monedas.MonGlosa, "
+        sql += "       rtrim(GlbT_Monedas.MonSimbolo) MonSimbolo, "
+        sql += "       CceT_Movimientos.MovCCeGlosa, "
+        sql += "       CceT_Movimientos.MovCceMontoLocalDebe, "
+        sql += "       CceT_Movimientos.MovCceMontoLocalHaber, "
+        sql += "       CceT_Movimientos.MovCceMontoImpuDebe, "
+        sql += "       CceT_Movimientos.MovCceMontoImpuHaber "
+        sql += "  from ConT_CabeceraOpe left join "
+        sql += "       CceT_Movimientos on CceT_Movimientos.pCabOpeId = ConT_CabeceraOpe.CabOpeId left join "
+        sql += "       CceT_Documentos on CceT_Documentos.DocCceId = CceT_Movimientos.pDocCceId  left join "
+        sql += "       GlbT_Entidad on GlbT_Entidad.EntId = CceT_Documentos.pEntId left join "
+        sql += "       GlbT_Monedas on GlbT_Monedas.MonedaId =  CceT_Documentos.pMonedaId left join "
+        sql += "       GlbT_Documentos on CceT_Documentos.TdoId = GlbT_Documentos.TdoId left join "
+        sql += "       ConT_CabeceraCom on ConT_CabeceraCom.CabCompId = ConT_CabeceraOpe.pCabCompId left join "
+        sql += "       ConT_Cuentas on ccet_Movimientos.pCtaId = cont_Cuentas.CtaId and cont_cuentas.tauid = 5 left join "
+        sql += "       ConT_TipoComprobante on ConT_CabeceraCom.TcoId = ConT_TipoComprobante.TcoId  "
+        sql += "                           and ConT_CabeceraCom.pEmpId = ConT_TipoComprobante.pEmpId "
+        sql += " where ConT_CabeceraOpe.CabOpeId = " + CabOpeId
+        sequelize.query(sql)
+            .then(data => {
+                resolve(data[0]);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+};
+
+
+var leeValorFactura = function (Empid, TdoId, DocCceNumero) {
+    return new Promise(function (resolve, reject) {
+        var sql = ""
+        sql += "select CceT_Documentos.pEmpId, "
+        sql += "       ConT_CabeceraOpe.CabOpeId, "
+        sql += "       ConT_CabeceraCom.TcoId, "
+        sql += "       ConT_TipoComprobante.TcoGlosa, "
+        sql += "       ConT_CabeceraCom.ComNumero, "
+        sql += "       ConT_CabeceraCom.ComGlosa, "
+        sql += "       ConT_CabeceraOpe.CabOpeNumero, "
+        sql += "       ConT_CabeceraOpe.CabOpeFecha, "
+        sql += "       ConT_CabeceraOpe.pTipoOpeId, "
+        sql += "       ConT_CabeceraOpe.CabOpeGlosa, "
+        sql += "       CceT_Documentos.TdoId, "
+        sql += "       Glbt_Documentos.TdoGlosa, "
+        sql += "       CceT_Documentos.DocCceNumero, "
+        sql += "       CceT_Documentos.DocCceFecEmi, "
+        sql += "       GlbT_Entidad.EntRut, "
+        sql += "       GlbT_Entidad.EntRazonSocial, "
+        sql += "       GlbT_Monedas.MonGlosa, "
+        sql += "       CceT_Movimientos.MovCCeGlosa, "
+        sql += "       CceT_Movimientos.MovCceMontoLocalDebe, "
+        sql += "       CceT_Movimientos.MovCceMontoLocalHaber, "
+        sql += "       CceT_Movimientos.MovCceMontoImpuDebe, "
+        sql += "       CceT_Movimientos.MovCceMontoImpuHaber "
+        sql += "  from ConT_CabeceraOpe left join "
+        sql += "       CceT_Movimientos on CceT_Movimientos.pCabOpeId = ConT_CabeceraOpe.CabOpeId left join "
+        sql += "       CceT_Documentos on CceT_Documentos.DocCceId = CceT_Movimientos.pDocCceId  left join "
+        sql += "       GlbT_Entidad on GlbT_Entidad.EntId = CceT_Documentos.pEntId left join "
+        sql += "       GlbT_Monedas on GlbT_Monedas.MonedaId =  CceT_Documentos.pMonedaId left join "
+        sql += "       GlbT_Documentos on CceT_Documentos.TdoId = GlbT_Documentos.TdoId left join "
+        sql += "       ConT_CabeceraCom on ConT_CabeceraCom.CabCompId = ConT_CabeceraOpe.pCabCompId left join "
+        sql += "       ConT_TipoComprobante on ConT_CabeceraCom.TcoId = ConT_TipoComprobante.TcoId  "
+        sql += "                           and ConT_CabeceraCom.pEmpId = ConT_TipoComprobante.pEmpId "
+        sql += " where CceT_Documentos.DocCceNumero = '"+DocCceNumero+"'"
+        sql += "   and CceT_Documentos.TdoId = "+TdoId
+        sql += "   and ConT_CabeceraCom.TcoId = 3 "
+        sql += "   and ConT_CabeceraOpe.pTipoOpeId = 421 "
+        sql += "   and CceT_Documentos.pEmpId = "+Empid
+        sequelize.query(sql)
+            .then(data => {
+                resolve(data[0]);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+};
+
+var leeDatosBanco = function (CabOpeId) {
+    return new Promise(function (resolve, reject) {
+        var sql = ""
+        sql += " select TesT_Movimientos.pEmpId, "
+        sql += "        ConT_CabeceraCom.TcoId, "
+        sql += "        ConT_TipoComprobante.TcoGlosa, "
+        sql += "        ConT_CabeceraCom.ComNumero, "
+        sql += "        ConT_CabeceraCom.ComGlosa, "
+        sql += "        ConT_CabeceraOpe.CabOpeNumero, "
+        sql += "        convert(varchar, ConT_CabeceraOpe.CabOpeFecha, 103) CabOpeFecha, "
+        sql += "        ConT_CabeceraOpe.CabOpeGlosa, "
+        sql += "        Test_Movimientos.TdoId, "
+        sql += "        rtrim(GlbT_Documentos.TdoGlosa) TdoGlosa, "
+        sql += "        Test_Movimientos.pCtaCteBcoId, "
+        sql += "        rtrim(GlbT_Entidad.EntRazonSocial) Banco, "
+        sql += "        TesT_Movimientos.MovTesGlosa, "
+        sql += "        TesT_Movimientos.MovTesMontoLocalDebe, "
+        sql += "        TesT_Movimientos.MovTesMontoLocalHaber, "
+        sql += "        TesT_Movimientos.MovTesMontoImpuDebe, "
+        sql += "        TesT_Movimientos.MovTesMontoImpuHaber "
+        sql += "  from ConT_CabeceraOpe left join "
+        sql += "       TesT_Movimientos on TesT_Movimientos.pCabOpeId = ConT_CabeceraOpe.CabOpeId left join "
+        sql += "       GlbT_Documentos on TesT_Movimientos.TdoId = GlbT_Documentos.TdoId left join "
+        sql += "       GlbT_Monedas on GlbT_Monedas.MonedaId =  TesT_Movimientos.pMonedaId left join "
+        sql += "       test_ctactesbancarias on test_ctactesbancarias.ctactebcoid = TesT_Movimientos.pctactebcoid left join "
+        sql += "       test_instifinan on test_instifinan.instcod = test_ctactesbancarias.instcod left join "
+        sql += "       glbt_entidad on glbt_entidad.entid = test_instifinan.pentid left join "
+        sql += "       ConT_CabeceraCom on ConT_CabeceraCom.CabCompId = ConT_CabeceraOpe.pCabCompId left join "
+        sql += "       ConT_TipoComprobante on ConT_CabeceraCom.TcoId = ConT_TipoComprobante.TcoId  "
+        sql += "                           and ConT_CabeceraCom.pEmpId = ConT_TipoComprobante.pEmpId "
+        sql += " where ConT_CabeceraOpe.CabOpeId = "+CabOpeId
+        sequelize.query(sql)
+            .then(data => {
+                resolve(data[0]);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+};
+
+
+
 var leeEmpresas = function () {
     return new Promise(function (resolve, reject) {
         var sql = ""
         sql += "select b.empid, a.EntRazonSocial, a.EntRut from glbt_entidad a, glbt_empresas b"
         sql += " where a.entid = b.pentid "
-        sequelizeFin700.query(sql)
+        sequelize.query(sql)
             .then(data => {
                 resolve(data[0]);
             })

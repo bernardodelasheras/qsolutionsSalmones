@@ -176,6 +176,9 @@ app.use(function (req, res, next) {
 // var configuracionRoutes = require("./routes/configuracion");
 // app.use("/configuracion", configuracionRoutes);
 
+var comprobanteIngresoRoutes = require("./routes/comprobanteIngreso");
+app.use("/comprobanteIngreso", comprobanteIngresoRoutes);
+
 
 var usuarioRoutes = require("./routes/usuario");
 app.use("/usuario", usuarioRoutes);
